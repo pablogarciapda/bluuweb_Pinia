@@ -35,6 +35,7 @@
     }
 
     await userStore.registerUser(email.value, password.value)
+    alert('verifica tu cuenta de email')
 
     router.push('/login')
   }

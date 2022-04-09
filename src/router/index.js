@@ -5,9 +5,10 @@ const requireAuth = async (to, from, next) => {
   const userStore = useUserStore()
   userStore.loadingSesion = true
   const user = await userStore.currentUser()
-  if (user) {
+  if (user && user.emailVerified) {
     next()
   } else {
+    userStore.logoutUser()
     next('/login')
   }
   userStore.loadingSesion = false

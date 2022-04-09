@@ -28,6 +28,8 @@
       return alert('Por favor ingrese su email y contraseña')
     }
     await userStore.loginUser(email.value, password.value)
+    email.value = ''
+    password.value = ''
     router.push('/')
   }
 </script>
