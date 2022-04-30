@@ -7,6 +7,7 @@ import {
   signOut,
 } from 'firebase/auth'
 import { auth } from '../firebaseConfig'
+import { useDatabaseStore } from '../stores/database'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -37,7 +38,8 @@ export const useUserStore = defineStore('user', {
 
       try {
         const { user } = await signInWithEmailAndPassword(auth, email, password)
-        if (user && user.emailVerified) {
+        // if (user && user.emailVerified) {
+        if (user) {
           this.userData = { email: user.email, uid: user.uid }
         } else {
           await this.logoutUser()
@@ -50,6 +52,8 @@ export const useUserStore = defineStore('user', {
       }
     },
     async logoutUser() {
+      const useData = useDatabaseStore()
+      useData.$reset()
       await signOut(auth)
         .then(() => {
           // Sign-out successful.
@@ -60,6 +64,7 @@ export const useUserStore = defineStore('user', {
         })
     },
     currentUser() {
+      const useData = useDatabaseStore()
       return new Promise((resolve, reject) => {
         const unsuscribe = onAuthStateChanged(
           auth,
@@ -68,6 +73,7 @@ export const useUserStore = defineStore('user', {
               this.userData = { email: user.email, uid: user.uid }
             } else {
               this.userData = null
+              useData.$reset()
             }
             resolve(user)
           },

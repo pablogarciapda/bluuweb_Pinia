@@ -5,7 +5,8 @@ const requireAuth = async (to, from, next) => {
   const userStore = useUserStore()
   userStore.loadingSesion = true
   const user = await userStore.currentUser()
-  if (user && user.emailVerified) {
+  // if (user && user.emailVerified) {
+  if (user) {
     next()
   } else {
     userStore.logoutUser()
@@ -30,6 +31,12 @@ const routes = [
     path: '/register',
     name: 'Register',
     component: () => import('../views/Register.vue'),
+  },
+  {
+    path: '/editar/:id',
+    name: 'Editar',
+    component: () => import('../views/Editar.vue'),
+    beforeEnter: requireAuth,
   },
 ]
 
